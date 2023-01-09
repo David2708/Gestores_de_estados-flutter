@@ -3,7 +3,7 @@
 class Usuario {
 
   final String nombre;
-  final int edad;
+  int edad;
   final List<String> profesiones;
 
   Usuario({
