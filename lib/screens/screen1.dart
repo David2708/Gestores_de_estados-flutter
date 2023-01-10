@@ -1,4 +1,8 @@
+import 'package:estados/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/user/user_bloc.dart';
 
 class Screen1 extends StatelessWidget {
    
@@ -9,8 +13,25 @@ class Screen1 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Screen 1'),
+        actions: [
+          IconButton(
+            onPressed: (){
+              BlocProvider.of<UserBloc>(context, listen: false).add(BorrarUser());
+            }, 
+            icon: const Icon(Icons.delete_forever_outlined)
+          )
+        ],
       ),
-      body: const _USerInformation(),
+      body: BlocBuilder<UserBloc, UserState>(
+        builder: ( _ , state) {
+
+          return state.existeUsuario
+           ? _USerInformation( usuario: state.usuario!, )
+           : const Center(
+            child: Text('No hay usuario seleccionado'),
+           );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.arrow_right_sharp),
         onPressed: () => Navigator.pushNamed(context, 'screen2'),
@@ -20,9 +41,12 @@ class Screen1 extends StatelessWidget {
 }
 
 class _USerInformation extends StatelessWidget {
+
   const _USerInformation({
-    Key? key,
+    Key? key, required this.usuario,
   }) : super(key: key);
+
+  final Usuario usuario;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +56,23 @@ class _USerInformation extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('General' , style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),),
-          Divider(), 
+        children: [
+          const Text('General' , style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),),
+          const Divider(), 
 
-          ListTile( title: Text('Nombe: '), ),
-          ListTile( title: Text('Edad: '), ),
+          ListTile( title: Text('Nombe: ${usuario.nombre}'), ),
+          ListTile( title: Text('Edad: ${usuario.edad}'), ),
 
-          Text('Profesiones' , style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),),
-          Divider(),
+          const Text('Profesiones' , style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),),
+          const Divider(),
 
-          ListTile( title: Text('Profesion 1: '), ),
-          ListTile( title: Text('Profesion 2: '), ),
-          ListTile( title: Text('Profesion 3: '), ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: usuario.profesiones.length,
+              itemBuilder: (context, index) 
+                => ListTile( title: Text('Profesion ${index + 1}: ${usuario.profesiones[index]}')),
+            ),
+          )
         ],
        )
     );

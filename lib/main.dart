@@ -1,9 +1,24 @@
+import 'package:estados/bloc/user/user_bloc.dart';
 import 'package:estados/screens/screen1.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'screens/screen2.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const AppState());
+
+class AppState extends StatelessWidget {
+  const AppState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: ( _ ) => UserBloc(),)
+      ], 
+      child: const MyApp());
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
+      title: 'Estados',
       initialRoute: 'screen1',
       routes: {
         'screen1' :(context) => const Screen1(),
