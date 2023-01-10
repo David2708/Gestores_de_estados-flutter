@@ -2,9 +2,9 @@
 
 class Usuario {
 
-  final String nombre;
-  final int edad;
-  final List<String> profesiones;
+  String nombre;
+  int edad;
+  List<String> profesiones;
 
   Usuario({
     required this.nombre,

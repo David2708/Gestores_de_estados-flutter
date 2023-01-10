@@ -1,4 +1,8 @@
+import 'package:estados/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/usuario_service.dart';
 
 class Screen2 extends StatelessWidget {
    
@@ -6,9 +10,14 @@ class Screen2 extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    
+    final usuarioService = Provider.of<UsuarioService>(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Screen 2'),
+        title: usuarioService.existeUsuario
+          ? Text('Nombre: ${usuarioService.usuario!.nombre}')
+          : const Text('Screen 2'),
       ),
       body: Center(
         child: Column(
@@ -17,17 +26,29 @@ class Screen2 extends StatelessWidget {
             MaterialButton(
               color: Colors.blue[400],
               child: const Text('Establecer usuario', style: TextStyle(color: Colors.white),),
-              onPressed: (){}
+              onPressed: (){
+                usuarioService.usuario = Usuario(
+                  nombre: 'David', 
+                  edad: 24, 
+                  profesiones: ['Fullstack Developer', 'Video Jugador Experto']
+                );
+              }
             ),
             MaterialButton(
               color: Colors.blue[400],
               child: const Text('Cambiar edad', style: TextStyle(color: Colors.white),),
-              onPressed: (){}
+              onPressed: (){
+                if (usuarioService.existeUsuario) {
+                  usuarioService.cambiarEdad(30);
+                }
+              }
             ),
             MaterialButton(
               color: Colors.blue[400],
               child: const Text('Añadir profesión', style: TextStyle(color: Colors.white),),
-              onPressed: (){}
+              onPressed: (){
+                usuarioService.addProfesion('Ingeniero');
+              }
             ),
           ],
         ),
